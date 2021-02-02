@@ -1,6 +1,8 @@
 # Spheroblast
 Top-down shooter made with the Godot game engine
 
+![screenshot](https://github.com/jimfrize/spheroblast/blob/main/screenshot.png?raw=true?raw=true "screenshot")
+
 <strong>CONTROLS</strong>
 
 Up Arrow: Forwards <br>
