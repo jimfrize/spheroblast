@@ -1,13 +1,13 @@
 # spheroblast
 Top-down shooter made with the Godot game engine
 
-CONTROLS
+<strong>CONTROLS</strong>
 
-Up Arrow: Forwards
-Down Arrow: Backwards
-Left Arrow: Rotate left
-Right Arrow: Rotate right
-z: Translate left
-x: Translate right
-Spacebar: Fire blaster
-r: Reset game
+Up Arrow: Forwards <br>
+Down Arrow: Backwards <br>
+Left Arrow: Rotate left <br>
+Right Arrow: Rotate right <br>
+z: Translate left <br>
+x: Translate right <br>
+Spacebar: Fire blaster <br>
+r: Reset game <br>
