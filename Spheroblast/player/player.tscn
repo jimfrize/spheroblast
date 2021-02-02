@@ -1,0 +1,283 @@
+[gd_scene load_steps=19 format=2]
+
+[ext_resource path="res://icon.png" type="Texture" id=1]
+[ext_resource path="res://player/player.gd" type="Script" id=2]
+[ext_resource path="res://player/light.png" type="Texture" id=3]
+[ext_resource path="res://player/dust.png" type="Texture" id=4]
+[ext_resource path="res://sounds/blast.wav" type="AudioStream" id=5]
+[ext_resource path="res://sounds/super_shot.wav" type="AudioStream" id=6]
+[ext_resource path="res://sounds/charging.wav" type="AudioStream" id=7]
+[ext_resource path="res://worlds/radial_distort.shader" type="Shader" id=8]
+[ext_resource path="res://conthrax-sb.ttf" type="DynamicFontData" id=9]
+
+[sub_resource type="RectangleShape2D" id=1]
+extents = Vector2( 64, 64 )
+
+[sub_resource type="Gradient" id=2]
+colors = PoolColorArray( 1, 1, 1, 1, 1, 1, 1, 0 )
+
+[sub_resource type="GradientTexture" id=3]
+gradient = SubResource( 2 )
+
+[sub_resource type="Curve" id=4]
+_data = [ Vector2( 0, 0 ), 0.0, 1.0, 0, 1, Vector2( 1, 1 ), 1.0, 0.0, 1, 0 ]
+
+[sub_resource type="CurveTexture" id=5]
+curve = SubResource( 4 )
+
+[sub_resource type="ParticlesMaterial" id=6]
+lifetime_randomness = 1.0
+emission_shape = 2
+emission_box_extents = Vector3( 60, 60, 1 )
+flag_disable_z = true
+gravity = Vector3( 0, 0, 0 )
+orbit_velocity = 0.0
+orbit_velocity_random = 0.0
+scale = 3.0
+scale_random = 1.0
+scale_curve = SubResource( 5 )
+color_ramp = SubResource( 3 )
+
+[sub_resource type="ShaderMaterial" id=7]
+shader = ExtResource( 8 )
+shader_param/aspect = 1.6
+shader_param/distortion = 1.0
+shader_param/radius = 1.0
+shader_param/alpha = 1.0
+shader_param/crop = 0.98
+shader_param/crop_color = Color( 0, 0, 0, 1 )
+
+[sub_resource type="DynamicFont" id=8]
+size = 32
+font_data = ExtResource( 9 )
+
+[sub_resource type="DynamicFont" id=9]
+size = 20
+font_data = ExtResource( 9 )
+
+[node name="player" type="KinematicBody2D"]
+collision_mask = 2
+script = ExtResource( 2 )
+
+[node name="Sprite" type="Sprite" parent="."]
+modulate = Color( 0.0588235, 0.25098, 0.439216, 1 )
+texture = ExtResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="Light2D" type="Light2D" parent="Sprite"]
+show_behind_parent = true
+scale = Vector2( 1.25, 1.25 )
+texture = ExtResource( 3 )
+texture_scale = 4.0
+energy = 2.0
+shadow_enabled = true
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CollisionShape2D" type="CollisionShape2D" parent="."]
+shape = SubResource( 1 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="dust" type="Particles2D" parent="."]
+modulate = Color( 0.12549, 1, 1, 1 )
+show_behind_parent = true
+emitting = false
+amount = 500
+lifetime = 2.0
+local_coords = false
+process_material = SubResource( 6 )
+texture = ExtResource( 4 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="fire_rate" type="Timer" parent="."]
+wait_time = 0.1
+one_shot = true
+
+[node name="charge_rate" type="Timer" parent="."]
+one_shot = true
+
+[node name="shake_rate" type="Timer" parent="."]
+wait_time = 0.01
+one_shot = true
+
+[node name="blast" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 5 )
+
+[node name="charging" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 7 )
+volume_db = -9.0
+pitch_scale = 0.85
+
+[node name="super_shot" type="AudioStreamPlayer" parent="."]
+stream = ExtResource( 6 )
+pitch_scale = 0.6
+
+[node name="Camera2D" type="Camera2D" parent="."]
+position = Vector2( 0, -200 )
+rotating = true
+current = true
+zoom = Vector2( 3, 3 )
+__meta__ = {
+"_edit_lock_": true
+}
+
+[node name="CanvasLayer" type="CanvasLayer" parent="Camera2D"]
+
+[node name="SHADER" type="ColorRect" parent="Camera2D/CanvasLayer"]
+material = SubResource( 7 )
+anchor_right = 1.0
+anchor_bottom = 1.0
+__meta__ = {
+"_edit_lock_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Label" type="Label" parent="Camera2D/CanvasLayer"]
+margin_left = 32.0
+margin_top = 32.0
+margin_right = 192.0
+margin_bottom = 72.0
+custom_fonts/font = SubResource( 8 )
+custom_colors/font_color = Color( 0, 1, 1, 1 )
+text = "BASIC"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Polygon2D" type="Polygon2D" parent="Camera2D/CanvasLayer/Label"]
+position = Vector2( -8, 0 )
+scale = Vector2( 1.05263, 1 )
+color = Color( 1, 0, 1, 1 )
+invert_enable = true
+invert_border = 4.0
+polygon = PoolVector2Array( 8, -1, 160, -1, 160, 39, 8, 39 )
+
+[node name="score" type="Label" parent="Camera2D/CanvasLayer"]
+margin_left = 780.0
+margin_top = 568.0
+margin_right = 1029.0
+margin_bottom = 608.0
+custom_fonts/font = SubResource( 9 )
+custom_colors/font_color = Color( 0, 1, 1, 1 )
+text = "SCORE: 000"
+align = 1
+valign = 1
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="Polygon2D" type="Polygon2D" parent="Camera2D/CanvasLayer/score"]
+position = Vector2( 26.7368, 0 )
+scale = Vector2( 1.15789, 1 )
+color = Color( 1, 0, 1, 1 )
+invert_enable = true
+invert_border = 4.0
+polygon = PoolVector2Array( 8, -1, 160, -1, 160, 39, 8, 39 )
+
+[node name="hp" type="ColorRect" parent="Camera2D/CanvasLayer"]
+margin_left = 896.0
+margin_top = 32.0
+margin_right = 904.0
+margin_bottom = 72.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_group_": true,
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect3" type="ColorRect" parent="Camera2D/CanvasLayer/hp"]
+margin_left = 12.0
+margin_right = 20.0
+margin_bottom = 40.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect4" type="ColorRect" parent="Camera2D/CanvasLayer/hp"]
+margin_left = 24.0
+margin_right = 32.0
+margin_bottom = 40.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect5" type="ColorRect" parent="Camera2D/CanvasLayer/hp"]
+margin_left = 36.0
+margin_right = 44.0
+margin_bottom = 40.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect6" type="ColorRect" parent="Camera2D/CanvasLayer/hp"]
+margin_left = 48.0
+margin_right = 56.0
+margin_bottom = 40.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect7" type="ColorRect" parent="Camera2D/CanvasLayer/hp"]
+margin_left = 60.0
+margin_right = 68.0
+margin_bottom = 40.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect8" type="ColorRect" parent="Camera2D/CanvasLayer/hp"]
+margin_left = 72.0
+margin_right = 80.0
+margin_bottom = 40.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="ColorRect9" type="ColorRect" parent="Camera2D/CanvasLayer/hp"]
+margin_left = 84.0
+margin_right = 92.0
+margin_bottom = 40.0
+color = Color( 1, 0, 1, 1 )
+__meta__ = {
+"_edit_use_anchors_": false
+}
+
+[node name="Polygon2D2" type="Polygon2D" parent="Camera2D/CanvasLayer/hp"]
+position = Vector2( -8.00003, 1.90735e-06 )
+scale = Vector2( 0.789474, 0.975 )
+color = Color( 0, 1, 1, 1 )
+invert_enable = true
+invert_border = 4.0
+polygon = PoolVector2Array( 5.06671, -1.90735e-06, 131.733, 0, 131.733, 41.0256, 5.06671, 41.0256 )
+
+[node name="Polygon2D" type="Polygon2D" parent="Camera2D/CanvasLayer/hp"]
+position = Vector2( 48, 4 )
+color = Color( 1, 1, 0, 1 )
+polygon = PoolVector2Array( -80, 0, -92, 32, -64, 12, -80, 12, -96, 12, -68, 32 )
+
+[node name="Polygon2D3" type="Polygon2D" parent="Camera2D/CanvasLayer/hp"]
+position = Vector2( 12, 4 )
+color = Color( 1, 1, 0, 1 )
+polygon = PoolVector2Array( -80, 0, -92, 32, -64, 12, -80, 12, -96, 12, -68, 32 )
+
+[node name="Polygon2D4" type="Polygon2D" parent="Camera2D/CanvasLayer/hp"]
+position = Vector2( -24, 4 )
+color = Color( 1, 1, 0, 1 )
+polygon = PoolVector2Array( -80, 0, -92, 32, -64, 12, -80, 12, -96, 12, -68, 32 )
