@@ -1,4 +1,4 @@
-# spheroblast
+# Spheroblast
 Top-down shooter made with the Godot game engine
 
 <strong>CONTROLS</strong>
