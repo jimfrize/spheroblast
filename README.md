@@ -13,5 +13,3 @@ z: Translate left <br>
 x: Translate right <br>
 Spacebar: Fire blaster <br>
 r: Reset game <br>
-
-This software is available for personal use under the CC BY-NC 4.0 license: https://creativecommons.org/licenses/by-nc/4.0/
